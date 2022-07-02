@@ -1,12 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.conf import settings
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
+from sklearn.linear_model import LogisticRegression
+from sklearn import feature_selection as fs
 import pandas as pd
 import json
-from sklearn import feature_selection as fs
-from sklearn.linear_model import LogisticRegression
 
 
 def index(request):
@@ -14,17 +14,31 @@ def index(request):
     df['label'].replace({2:0},inplace=True)
     y = df.loc[:, ['label']]
     
-    # Not selection
-    x = df.loc[:, ['jenis_kelamin', 'status','usia','pekerjaan','pendapatan_pertahun','produk']]
-    
-    # Selection
+    # Selection x1
     x1= df.loc[:, [ 'jenis_kelamin','status','pendapatan_pertahun']]
+    
+    # Not selection x2
+    x2 = df.loc[:, ['jenis_kelamin', 'status','usia','pekerjaan','pendapatan_pertahun','produk']]
+    
+    # Selection x1
+    X1_train, X1_test, y1_train, y1_test = train_test_split(x1,y,test_size = 0.1,random_state=30,train_size=None,shuffle=True,stratify=None)
+    model_NB1=GaussianNB()
+    model_NB1.fit(X1_train,y1_train)
+    y1_pediksi=model_NB1.predict(X1_test)
+
+    # Not selection x2
+    X2_train, X2_test, y2_train, y2_test = train_test_split(x2,y,test_size = 0.1,random_state=30,train_size=None,shuffle=True,stratify=None)
+    model_NB2=GaussianNB()
+    model_NB2.fit(X2_train,y2_train)
+    y2_pediksi=model_NB2.predict(X2_test)
 
 
-    X_train, X_test, y_train, y_test = train_test_split(x1,y,test_size = 0.1,random_state=30,train_size=None,shuffle=True,stratify=None)
-    model_NB=GaussianNB()
-    model_NB.fit(X_train,y_train)
-    y_pediksi=model_NB.predict(X_test)#prediksi
+    # Feature Selection
+    model_ls = LogisticRegression(max_iter=15)
+    rfe = fs.RFE(model_ls)
+    rfe.fit(x2,y)
+    support = rfe.support_
+    ranking = rfe.ranking_
 
     """
     Read Data
@@ -34,79 +48,69 @@ def index(request):
     data_excel = json.loads(json_records)
     
     """
-    
-
-    """
-
-
-result_X_train = len(X_train2)
-result_Y_train = len(y_train2)
-result_X_test = len(X_test2)
-result_X_test = len(y_test2)
-accuracy = accuracy_score(y_test2,y_pediksi2)
-    
-
-    """
     Result Data
     """
-    model_ls = LogisticRegression(max_iter=15)
-    rfe = fs.RFE(model_ls)
-    rfe.fit(x,y)
-    print(f'Support = {rfe.support_}')#tampilkan 
-    print(f'Ranking = {rfe.ranking_}') #ampilkan 
-    result_X_train = len(X_train)
-    result_Y_train = len(y_train)
-    result_X_test = len(X_test)
-    result_X_test = len(y_test)
-    accuracy = accuracy_score(y_test,y_pediksi)
+    # Selection x1
+    result1 = {
+        'result_X_train': len(X1_train),
+        'result_Y_train': len(y1_train),
+        'result_X_test': len(X1_test),
+        'result_Y_test': len(y1_test),
+        'accuracy': accuracy_score(y1_test,y1_pediksi),
+    }
 
-
-
+    # Not selection x2
+    result2 = {
+        'result_X_train': len(X2_train),
+        'result_Y_train': len(y2_train),
+        'result_X_test': len(X2_test),
+        'result_Y_test': len(y2_test),
+        'accuracy': accuracy_score(y2_test,y2_pediksi),
+    }
+    
     """
-    Selection Fiture
+    Selection Feature
     """
     have_data = False
     selection = None
     data_predik = {}
     if request.method == 'POST':
-        selection = True
         check_selection = request.POST.get('selection')
-        input_data = {
-            "jenis_kelamin": request.POST.get('jenis_kelamin'),
-            "status": request.POST.get('status'),
-            "pendapatan_pertahun": request.POST.get('pendapatan_pertahun')
-        }
-        if check_selection == 'not_selection':
-            """
-            Saya ganti dari x1 menjadi x
-            """
-            X_train, X_test, y_train, y_test = train_test_split(x,y,test_size = 0.1,random_state=30,train_size=None,shuffle=True,stratify=None)
-            #X_train2, X_test2, y_train2, y_test2 = train_test_split(x,y,test_size = 0.1,random_state=30,train_size=None,shuffle=True,stratify=None)
-            model_NB=GaussianNB()
-            model_NB.fit(X_train,y_train)
-            input_data['usia'] = request.POST.get('usia')
-            input_data['pekerjaan'] = request.POST.get('pekerjaan')
-            input_data['produk'] = request.POST.get('produk')
+        if check_selection == 'selection':
+            input_data = {
+                "jenis_kelamin": request.POST.get('jenis_kelamin'),
+                "status": request.POST.get('status'),
+                "pendapatan_pertahun": request.POST.get('pendapatan_pertahun')
+            }
+            data_predik = pd.DataFrame(input_data, index=[0])
+            y_predik = model_NB1.predict(data_predik)
+            selection = True
+        else:
+            input_data = {
+                "jenis_kelamin": request.POST.get('jenis_kelamin'),
+                "status": request.POST.get('status'),
+                "pendapatan_pertahun": request.POST.get('pendapatan_pertahun'),
+                'usia': request.POST.get('usia'),
+                'pekerjaan': request.POST.get('pekerjaan'),
+                'produk': request.POST.get('produk'),
+            }
+            data_predik = pd.DataFrame(input_data, index=[0])
+            y_predik = model_NB2.predict(data_predik)
             selection = False
-        data_predik = pd.DataFrame(input_data, index=[0])
-        y_predik = model_NB.predict(data_predik)
         data_predik['label'] = y_predik
         json_records = data_predik.reset_index().to_json(orient ='records')
         data_predik = []
         data_predik = json.loads(json_records)
         have_data = True
-    
-    
     context = {
         'title': 'SHOW DATA ML',
         'data': data_excel,
-        'result_X_train': result_X_train,
-        'result_Y_train': result_Y_train,
-        'result_X_test': result_X_test,
-        'result_Y_test': result_X_test,
-        'accuracy': accuracy,
+        'support': support,
+        'ranking': ranking,
+        'result1': result1,
+        'result2': result2,
         'data_predik': data_predik,
         'have_data': have_data,
-        'selection': selection
+        'selection': selection,
     }
     return render(request, 'index.html', context)

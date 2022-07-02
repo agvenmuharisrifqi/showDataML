@@ -77,31 +77,77 @@
             <!-- Start result data -->
             <section class="section">
                 <div class="result-data">
-                    <p>
-                        <span class="label-result">Dimensi dari X_train</span>
-                        :
-                        <span id="dimensi_x_train">{{ result_X_train }}</span>
-                    </p>
-                    <p>
-                        <span class="label-result">Dimensi dari Y_train</span>
-                        :
-                        <span id="dimensi_y_train">{{ result_Y_train }}</span>
-                    </p>
-                    <p>
-                        <span class="label-result">Dimensi dari X_test</span>
-                        :
-                        <span id="dimensi_x_test">{{ result_X_test }}</span>
-                    </p>
-                    <p>
-                        <span class="label-result">Dimensi dari Y_test</span>
-                        :
-                        <span id="dimensi_y_test">{{ result_Y_test }}</span>
-                    </p>
-                    <p>
-                        <span class="label-result">Accuracy Score</span>
-                        :
-                        <span id="accuracy_score">{{ accuracy }}</span>
-                    </p>
+                    <div style="padding-top: 20px; padding-bottom: 20px;">
+                        <h4>Model Feature Selection</h4>
+                        <p>
+                            <span class="label-result">Support</span>
+                            :
+                            <span id="dimensi_x_train">{{ support }}</span>
+                        </p>
+                        <p>
+                            <span class="label-result">Ranking</span>
+                            :
+                            <span id="dimensi_x_train">{{ ranking }}</span>
+                        </p>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <div>
+                            <h4>Selection Feature</h4>
+                            <p>
+                                <span class="label-result">Dimensi dari X_train</span>
+                                :
+                                <span id="dimensi_x_train">{{ result1.result_X_train }}</span>
+                            </p>
+                            <p>
+                                <span class="label-result">Dimensi dari Y_train</span>
+                                :
+                                <span id="dimensi_y_train">{{ result1.result_Y_train }}</span>
+                            </p>
+                            <p>
+                                <span class="label-result">Dimensi dari X_test</span>
+                                :
+                                <span id="dimensi_x_test">{{ result1.result_X_test }}</span>
+                            </p>
+                            <p>
+                                <span class="label-result">Dimensi dari Y_test</span>
+                                :
+                                <span id="dimensi_y_test">{{ result1.result_Y_test }}</span>
+                            </p>
+                            <p>
+                                <span class="label-result">Accuracy Score</span>
+                                :
+                                <span id="accuracy_score">{{ result1.accuracy }}</span>
+                            </p>
+                        </div>
+                        <div>
+                            <h4>Not Selection Feature</h4>
+                            <p>
+                                <span class="label-result">Dimensi dari X_train</span>
+                                :
+                                <span id="dimensi_x_train">{{ result2.result_X_train }}</span>
+                            </p>
+                            <p>
+                                <span class="label-result">Dimensi dari Y_train</span>
+                                :
+                                <span id="dimensi_y_train">{{ result2.result_Y_train }}</span>
+                            </p>
+                            <p>
+                                <span class="label-result">Dimensi dari X_test</span>
+                                :
+                                <span id="dimensi_x_test">{{ result2.result_X_test }}</span>
+                            </p>
+                            <p>
+                                <span class="label-result">Dimensi dari Y_test</span>
+                                :
+                                <span id="dimensi_y_test">{{ result2.result_Y_test }}</span>
+                            </p>
+                            <p>
+                                <span class="label-result">Accuracy Score</span>
+                                :
+                                <span id="accuracy_score">{{ result2.accuracy }}</span>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </section>
             <!-- End result data -->
@@ -240,6 +286,25 @@
         integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="{% static 'js/scripts.js' %}"></script>
+    <script>
+        /**
+         * Function for selection or not selection nav and section
+         * I put the script here so that it can read variables from views
+         */
+        let selection = '{{ selection }}';
+        console.log(selection)
+        if (selection === 'True') {
+            $(".nav-item").removeClass("active")
+            $(".nav-item:nth-child(4)").addClass("active")
+            $(".section").removeClass("active")
+            $(".section:nth-child(4)").addClass("active")
+        } else if (selection === 'False') {
+            $(".nav-item").removeClass("active")
+            $(".nav-item:nth-child(5)").addClass("active")
+            $(".section").removeClass("active")
+            $(".section:nth-child(5)").addClass("active")
+        }
+    </script>
 </body>
 
 </html>
