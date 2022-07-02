@@ -1,0 +1,160 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <main class="container">
+        <nav class="navbar">
+            <ul class="nav-wrapper">
+                <li class="nav-item active">Input File</li>
+                <li class="nav-item">Read File</li>
+                <li class="nav-item">Result Data</li>
+                <li class="nav-item">Input Data</li>
+            </ul>
+        </nav>
+        <div class="content">
+            <!-- Start file upload -->
+            <section class="section active">
+                <div class="section-input-file">
+                    <h2 style="font-size: 32px; margin-bottom: 20px;">File Upload</h2>
+                    <p style="margin-bottom: 20px;">You can add files here</p>
+                    <form action="">
+                        <div class="input-wrapper">
+                            <label for="input_file">Choose File</label>
+                            <input type="file" name="input_file" id="input_file" class="input-file"
+                                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                        </div>
+                    </form>
+                    <span style="font-size: 12px; margin-top: 10px;">
+                        Note : <span style="color: red;">row one must be header table</span>
+                    </span>
+                </div>
+            </section>
+            <!-- End file upload -->
+
+            <!-- Start read file upload -->
+            <section class="section">
+                <div class="read-file">
+                    <div class="info-read-file">
+                        <span class="no-file">Tidak ada file yang dipilih!</span>
+                        <form action="" class="there-are-file">
+                            <label for="input_sheet">Your sheet index</label>
+                            <input type="text" class="" name="input_sheet" id="input_sheet" placeholder="Your shets">
+                            <span style="font-size: 12px; margin-top: 10px;">
+                                Note : <span style="color: red;">index sheet starting from 0</span>
+                            </span>
+                        </form>
+                    </div>
+                    <div id="excel_data"></div>
+                </div>
+            </section>
+            <!-- End read file upload -->
+
+            <!-- Start result data -->
+            <section class="section">
+                <div class="result-data">
+                    <p>
+                        <span class="label-result">Dimensi dari X_train</span>
+                        :
+                        <span id="dimensi_x_train">764</span>
+                    </p>
+                    <p>
+                        <span class="label-result">Dimensi dari Y_train</span>
+                        :
+                        <span id="dimensi_y_train">764</span>
+                    </p>
+                    <p>
+                        <span class="label-result">Dimensi dari X_test</span>
+                        :
+                        <span id="dimensi_x_test">85</span>
+                    </p>
+                    <p>
+                        <span class="label-result">Dimensi dari Y_test</span>
+                        :
+                        <span id="dimensi_y_test">85</span>
+                    </p>
+                    <p>
+                        <span class="label-result">Accuracy Score</span>
+                        :
+                        <span id="accuracy_score">0.72182718728</span>
+                    </p>
+                </div>
+            </section>
+            <!-- End result data -->
+
+            <!-- Start input data -->
+            <section class="section">
+                <div class="input-data">
+                    <!-- Input Table -->
+                    <div class="input-table-wrapper">
+                        <div class="input-table">
+                            <div class="input-wrapper">
+                                <label for="input_jk">Jenis Kelamin</label>
+                                <input type="text" id="input_jk" name="input_jk">
+                            </div>
+                            <div class="input-wrapper">
+                                <label for="input_status">Status</label>
+                                <input type="text" id="input_status" name="input_status">
+                            </div>
+                            <div class="input-wrapper">
+                                <label for="input_usia">Usia</label>
+                                <input type="text" id="input_usia" name="input_usia">
+                            </div>
+                            <div class="input-wrapper">
+                                <label for="input_pekerjaan">Pekerjaan</label>
+                                <input type="text" id="input_pekerjaan" name="input_pekerjaan">
+                            </div>
+                            <div class="input-wrapper">
+                                <label for="input_pendapatan">Pendapatan pertahun</label>
+                                <input type="text" id="input_pendapatan" name="input_pendapatan">
+                            </div>
+                            <div class="input-wrapper">
+                                <label for="input_produk">Produk</label>
+                                <input type="text" id="input_produk" name="input_produk">
+                            </div>
+                            <button type="button" class="btn-add">Add Data</button>
+                        </div>
+                        <button class="btn-overlay">DOWN &oror;</button>
+                    </div>
+                    <!-- Table -->
+                    <table id="my_table" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Jenis kelamin</th>
+                                <th>Status</th>
+                                <th>Usia</th>
+                                <th>Pekerjaan</th>
+                                <th>Pendapatan pertahun</th>
+                                <th>Produk</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="table_null">
+                                <td colspan="6">
+                                    Tidak ada data
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <!-- End input data -->
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+
+</html>
