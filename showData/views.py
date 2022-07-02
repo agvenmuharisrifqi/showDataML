@@ -32,7 +32,18 @@ def index(request):
     result_X_test = len(X_test)
     result_X_test = len(y_test)
     accuracy = accuracy_score(y_test,y_pediksi)
+    data = {
+  "jenis_kelamin":, # input dari form
+  "status":, #input dari form
+  "pendapatan_pertahun":,#input dari form
 
+}
+
+#load data into a DataFrame object:
+df = pd.DataFrame(data)
+y_predik=model_NB.predict(df)
+data_predik['label']=y_predik
+print (data_predik)# autput data prediksi
     
     context = {
         'title': 'SHOW DATA ML',
