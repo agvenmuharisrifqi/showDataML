@@ -128,38 +128,37 @@ label[for='input_file']:hover{
 }
 
 /* Input Data */
-
-.input-table-wrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: white;
-}
-
-.input-table {
-    display: none;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    align-items: flex-end;
-    column-gap: 10px;
-    row-gap: 10px;
-    margin: 20px;
-    transition: all .5s;
-}
-
-.input-table.active {
+.input-data-wrapper {
     display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
-.input-table input {
+.input-data {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.input-data div {
+    margin: 5px 0;
+}
+
+.input-data label {
+    display: inline-block;
+    width: 170px;
+}
+
+.input-data input {
     padding: 5px;
     font-size: 1rem;
 }
 
 .btn-add {
     padding: 8px;
-    width: 210px;
+    width: 100%;
     font-size: 1rem;
     cursor: pointer;
     background-color: #22d3ee;
@@ -169,13 +168,6 @@ label[for='input_file']:hover{
 
 .btn-add:hover {
     background-color: #06b6d4;
-}
-
-.btn-overlay {
-    width: 100%;
-    padding: 10px;
-    background-color: rgba(0, 0, 0, .3);
-    transition: all .5s;
 }
 
 .styled-table {
@@ -237,12 +229,3 @@ label[for='input_file']:hover{
     padding: 5px;
     font-size: 1rem;
 }
-
-/* @media (max-width: 760px) {
-    .container {
-        grid-template-columns: 1fr;
-    }
-    .navbar {
-        display: none;
-    }
-} */

@@ -14,15 +14,15 @@
     <main class="container">
         <nav class="navbar">
             <ul class="nav-wrapper">
-                <li class="nav-item active">Input File</li>
+                <li class="nav-item">Input File</li>
                 <li class="nav-item">Read File</li>
                 <li class="nav-item">Result Data</li>
-                <li class="nav-item">Input Data</li>
+                <li class="nav-item active">Input Data</li>
             </ul>
         </nav>
         <div class="content">
             <!-- Start file upload -->
-            <section class="section active">
+            <section class="section">
                 <div class="section-input-file">
                     <h2 style="font-size: 32px; margin-bottom: 20px;">File Upload</h2>
                     <p style="margin-bottom: 20px;">You can add files here</p>
@@ -107,38 +107,25 @@
             <!-- End result data -->
 
             <!-- Start input data -->
-            <section class="section">
-                <div class="input-data">
-                    <!-- Input Table -->
-                    <div class="input-table-wrapper">
-                        <div class="input-table">
-                            <div class="input-wrapper">
-                                <label for="input_jk">Jenis Kelamin</label>
-                                <input type="text" id="input_jk" name="input_jk">
+            <section class="section active">
+                <div class="input-data-wrapper">
+                    <div class="input-data">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div>
+                                <label for="jenis_kelamin">Jenis Kelamin : </label>
+                                <input type="text" name="jenis_kelamin" id="jenis_kelamin">
                             </div>
-                            <div class="input-wrapper">
-                                <label for="input_status">Status</label>
-                                <input type="text" id="input_status" name="input_status">
+                            <div>
+                                <label for="status">Status : </label>
+                                <input type="text" name="status" id="status">
                             </div>
-                            <div class="input-wrapper">
-                                <label for="input_usia">Usia</label>
-                                <input type="text" id="input_usia" name="input_usia">
+                            <div>
+                                <label for="pendapatan_pertahun">Pendapatan Pertahun : </label>
+                                <input type="text" name="pendapatan_pertahun" id="pendapatan_pertahun">
                             </div>
-                            <div class="input-wrapper">
-                                <label for="input_pekerjaan">Pekerjaan</label>
-                                <input type="text" id="input_pekerjaan" name="input_pekerjaan">
-                            </div>
-                            <div class="input-wrapper">
-                                <label for="input_pendapatan">Pendapatan pertahun</label>
-                                <input type="text" id="input_pendapatan" name="input_pendapatan">
-                            </div>
-                            <div class="input-wrapper">
-                                <label for="input_produk">Produk</label>
-                                <input type="text" id="input_produk" name="input_produk">
-                            </div>
-                            <button type="button" class="btn-add">Add Data</button>
-                        </div>
-                        <button class="btn-overlay">DOWN &oror;</button>
+                            <button class="btn-add">SUMBIT</button>
+                        </form>
                     </div>
                     <!-- Table -->
                     <table id="my_table" class="styled-table">
@@ -146,18 +133,27 @@
                             <tr>
                                 <th>Jenis kelamin</th>
                                 <th>Status</th>
-                                <th>Usia</th>
-                                <th>Pekerjaan</th>
                                 <th>Pendapatan pertahun</th>
-                                <th>Produk</th>
+                                <th>Label</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {% if have_data %}
+                            {% for row in data_predik %}
                             <tr id="table_null">
-                                <td colspan="6">
+                                <td>{{ row.jenis_kelamin }}</td>
+                                <td>{{ row.status }}</td>
+                                <td>{{ row.pendapatan_pertahun }}</td>
+                                <td>{{ row.label }}</td>
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                            <tr id="table_null">
+                                <td colspan="4">
                                     Tidak ada data
                                 </td>
                             </tr>
+                            {% endif %}
                         </tbody>
                     </table>
                 </div>

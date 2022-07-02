@@ -21,8 +21,8 @@ def index(request):
     Read Data
     """
     json_records = df.reset_index().to_json(orient ='records')
-    data = []
-    data = json.loads(json_records)
+    data_excel = []
+    data_excel = json.loads(json_records)
     
     """
     Result Data
@@ -32,26 +32,35 @@ def index(request):
     result_X_test = len(X_test)
     result_X_test = len(y_test)
     accuracy = accuracy_score(y_test,y_pediksi)
-    data = {
-  "jenis_kelamin":, # input dari form
-  "status":, #input dari form
-  "pendapatan_pertahun":,#input dari form
 
-}
-
-#load data into a DataFrame object:
-df = pd.DataFrame(data)
-y_predik=model_NB.predict(df)
-data_predik['label']=y_predik
-print (data_predik)# autput data prediksi
+    """
+    Input Data
+    """
+    have_data = False
+    data_predik = {}
+    if request.method == 'POST':
+        input_data = {
+            "jenis_kelamin": request.POST.get('jenis_kelamin'),
+            "status": request.POST.get('status'),
+            "pendapatan_pertahun": request.POST.get('pendapatan_pertahun')
+        }
+        data_predik = pd.DataFrame(input_data, index=[0])
+        y_predik = model_NB.predict(data_predik)
+        data_predik['label'] = y_predik
+        have_data = True
+        json_records = data_predik.reset_index().to_json(orient ='records')
+        data_predik = []
+        data_predik = json.loads(json_records)
     
     context = {
         'title': 'SHOW DATA ML',
-        'data': data,
+        'data': data_excel,
         'result_X_train': result_X_train,
         'result_Y_train': result_Y_train,
         'result_X_test': result_X_test,
         'result_Y_test': result_X_test,
         'accuracy': accuracy,
+        'data_predik': data_predik,
+        'have_data': have_data,
     }
     return render(request, 'index.html', context)
