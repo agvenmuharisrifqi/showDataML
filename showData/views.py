@@ -47,10 +47,10 @@ def index(request):
         data_predik = pd.DataFrame(input_data, index=[0])
         y_predik = model_NB.predict(data_predik)
         data_predik['label'] = y_predik
-        have_data = True
         json_records = data_predik.reset_index().to_json(orient ='records')
         data_predik = []
         data_predik = json.loads(json_records)
+        have_data = True
     
     context = {
         'title': 'SHOW DATA ML',
