@@ -5,6 +5,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
 import pandas as pd
 import json
+from sklearn import feature_selection as fs
+from sklearn.linear_model import LogisticRegression
 
 
 def index(request):
@@ -32,13 +34,33 @@ def index(request):
     data_excel = json.loads(json_records)
     
     """
+    
+
+    """
+
+
+result_X_train = len(X_train2)
+result_Y_train = len(y_train2)
+result_X_test = len(X_test2)
+result_X_test = len(y_test2)
+accuracy = accuracy_score(y_test2,y_pediksi2)
+    
+
+    """
     Result Data
     """
+    model_ls = LogisticRegression(max_iter=15)
+    rfe = fs.RFE(model_ls)
+    rfe.fit(x,y)
+    print(f'Support = {rfe.support_}')#tampilkan 
+    print(f'Ranking = {rfe.ranking_}') #ampilkan 
     result_X_train = len(X_train)
     result_Y_train = len(y_train)
     result_X_test = len(X_test)
     result_X_test = len(y_test)
     accuracy = accuracy_score(y_test,y_pediksi)
+
+
 
     """
     Selection Fiture
@@ -59,6 +81,7 @@ def index(request):
             Saya ganti dari x1 menjadi x
             """
             X_train, X_test, y_train, y_test = train_test_split(x,y,test_size = 0.1,random_state=30,train_size=None,shuffle=True,stratify=None)
+            #X_train2, X_test2, y_train2, y_test2 = train_test_split(x,y,test_size = 0.1,random_state=30,train_size=None,shuffle=True,stratify=None)
             model_NB=GaussianNB()
             model_NB.fit(X_train,y_train)
             input_data['usia'] = request.POST.get('usia')
@@ -72,6 +95,7 @@ def index(request):
         data_predik = []
         data_predik = json.loads(json_records)
         have_data = True
+    
     
     context = {
         'title': 'SHOW DATA ML',
