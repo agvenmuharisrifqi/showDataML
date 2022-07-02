@@ -43,16 +43,32 @@
             <!-- Start read file upload -->
             <section class="section">
                 <div class="read-file">
-                    <div class="info-read-file">
-                        <span class="no-file">Tidak ada file yang dipilih!</span>
-                        <form action="" class="there-are-file">
-                            <label for="input_sheet">Your sheet index</label>
-                            <input type="text" class="" name="input_sheet" id="input_sheet" placeholder="Your shets">
-                            <span style="font-size: 12px; margin-top: 10px;">
-                                Note : <span style="color: red;">index sheet starting from 0</span>
-                            </span>
-                        </form>
-                    </div>
+                    <table id="my_table" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Jenis kelamin</th>
+                                <th>Status</th>
+                                <th>Usia</th>
+                                <th>Pekerjaan</th>
+                                <th>Pendapatan pertahun</th>
+                                <th>Produk</th>
+                                <th>Label</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in data %}
+                            <tr id="table_null">
+                                <td>{{ row.jenis_kelamin }}</td>
+                                <td>{{ row.status }}</td>
+                                <td>{{ row.usia }}</td>
+                                <td>{{ row.pekerjaan }}</td>
+                                <td>{{ row.pendapatan_pertahun }}</td>
+                                <td>{{ row.produk }}</td>
+                                <td>{{ row.label }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                     <div id="excel_data"></div>
                 </div>
             </section>
@@ -64,27 +80,27 @@
                     <p>
                         <span class="label-result">Dimensi dari X_train</span>
                         :
-                        <span id="dimensi_x_train">764</span>
+                        <span id="dimensi_x_train">{{ result_X_train }}</span>
                     </p>
                     <p>
                         <span class="label-result">Dimensi dari Y_train</span>
                         :
-                        <span id="dimensi_y_train">764</span>
+                        <span id="dimensi_y_train">{{ result_Y_train }}</span>
                     </p>
                     <p>
                         <span class="label-result">Dimensi dari X_test</span>
                         :
-                        <span id="dimensi_x_test">85</span>
+                        <span id="dimensi_x_test">{{ result_X_test }}</span>
                     </p>
                     <p>
                         <span class="label-result">Dimensi dari Y_test</span>
                         :
-                        <span id="dimensi_y_test">85</span>
+                        <span id="dimensi_y_test">{{ result_Y_test }}</span>
                     </p>
                     <p>
                         <span class="label-result">Accuracy Score</span>
                         :
-                        <span id="accuracy_score">0.72182718728</span>
+                        <span id="accuracy_score">{{ accuracy }}</span>
                     </p>
                 </div>
             </section>

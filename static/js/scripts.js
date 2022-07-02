@@ -1,7 +1,7 @@
 /**
  * Function Navbar
  */
- $(".nav-item").each(function (index) {
+$(".nav-item").each(function (index) {
     $(this).click(function () {
         $(".nav-item").removeClass("active");
         $(this).addClass("active");
@@ -67,55 +67,54 @@ function nullInput() {
 }
 
 /**
- * Function for check file exists or not
+ * Function for display sheet to table
  */
 $("#input_file").change(function (e) {
     if ($(this).val().length > 0) {
-        $(".no-file").css('display', 'none');
-        $(".there-are-file").css('display', 'flex');
-    } else {
-        $(".no-file").css('display', 'block');
-        $(".there-are-file").css('display', 'none');
-    }
-});
-
-/**
- * Function for display sheet to table
- */
-$("#input_sheet").change(function () {
-    var value = parseInt(this.value);
-    var file = $("#input_file").prop("files")[0]
-    var reader = new FileReader();
-    reader.readAsArrayBuffer(file)
-    reader.onload = function () {
-        var data = new Uint8Array(reader.result);
-        var workbook = XLSX.read(data, {
-            type: 'array'
-        });
-        var first_sheet_name = workbook.SheetNames[value];
-        var worksheet = workbook.Sheets[first_sheet_name];
-        var result = XLSX.utils.sheet_to_json(worksheet, {
-            header: 1
-        });
-
-        var table_output = '<table class="styled-table">';
-        for (var row = 0; row < result.length; row++) {
-            table_output += '<tr>';
-            for (var cell = 0; cell < result[row].length; cell++) {
-                if (row == 0) {
-                    if(result[row][cell]){
-                        table_output += '<th>' + result[row][cell] + '</th>';
-                    }
-                } else {
-                    if (result[row][cell]){
-                        table_output += '<td>' + result[row][cell] + '</td>';
+        var file = this.files[0]
+        var reader = new FileReader();
+        reader.readAsArrayBuffer(file)
+        reader.onload = function () {
+            var data = new Uint8Array(reader.result);
+            var workbook = XLSX.read(data, {
+                type: 'array'
+            });
+            var first_sheet_name = workbook.SheetNames[0];
+            var worksheet = workbook.Sheets[first_sheet_name];
+            var result = XLSX.utils.sheet_to_json(worksheet, {
+                header: 1
+            });
+            var table_output = '<table class="styled-table">';
+            for (var row = 0; row < result.length; row++) {
+                if (row === 0){
+                    table_output += '<thead>'
+                }else if (row === 1) {
+                    table_output += '<tbody>'
+                }
+                table_output += '<tr>';
+                for (var cell = 0; cell < result[row].length; cell++) {
+                    if (row == 0) {
+                        if (result[row][cell]) {
+                            table_output += '<th>' + result[row][cell] + '</th>';
+                        }
+                    } else {
+                        if (result[row][cell] !== "") {
+                            table_output += '<td>' + result[row][cell] + '</td>';
+                        }
                     }
                 }
+                table_output += '</tr>';
+                if (row === 0){
+                    table_output += '</thead>'
+                }else if (row === 1) {
+                    table_output += '</tbody>'
+                }
             }
-            table_output += '</tr>';
+            table_output += '</table>';
+            $("#excel_data").html(table_output);
         }
-        table_output += '</table>';
-        $("#excel_data").html(table_output);
+        $(".no-file").css('display', 'none');
+    } else {
+        $(".no-file").css('display', 'block');
     }
-
-})
+});
