@@ -10,19 +10,19 @@
 </head>
 
 <body>
-
     <main class="container">
         <nav class="navbar">
             <ul class="nav-wrapper">
-                <li class="nav-item">Input File</li>
+                <li class="nav-item active">Input File</li>
                 <li class="nav-item">Read File</li>
                 <li class="nav-item">Result Data</li>
-                <li class="nav-item active">Input Data</li>
+                <li class="nav-item">Selection</li>
+                <li class="nav-item">Not Selection</li>
             </ul>
         </nav>
         <div class="content">
             <!-- Start file upload -->
-            <section class="section">
+            <section class="section active">
                 <div class="section-input-file">
                     <h2 style="font-size: 32px; margin-bottom: 20px;">File Upload</h2>
                     <p style="margin-bottom: 20px;">You can add files here</p>
@@ -106,12 +106,13 @@
             </section>
             <!-- End result data -->
 
-            <!-- Start input data -->
-            <section class="section active">
+            <!-- Start selection data -->
+            <section class="section">
                 <div class="input-data-wrapper">
                     <div class="input-data">
                         <form method="POST">
                             {% csrf_token %}
+                            <input type="hidden" name="selection" id="selection" value="selection">
                             <div>
                                 <label for="jenis_kelamin">Jenis Kelamin : </label>
                                 <input type="text" name="jenis_kelamin" id="jenis_kelamin">
@@ -138,7 +139,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% if have_data %}
+                            {% if have_data and selection %}
                             {% for row in data_predik %}
                             <tr id="table_null">
                                 <td>{{ row.jenis_kelamin }}</td>
@@ -158,10 +159,82 @@
                     </table>
                 </div>
             </section>
-            <!-- End input data -->
+            <!-- End selection data -->
+
+            <!-- Start not selection data -->
+            <section class="section">
+                <div class="input-data-wrapper">
+                    <div class="input-data">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="selection" id="selection" value="not_selection">
+                            <div>
+                                <label for="jenis_kelamin">Jenis Kelamin : </label>
+                                <input type="text" name="jenis_kelamin" id="jenis_kelamin">
+                            </div>
+                            <div>
+                                <label for="status">Status : </label>
+                                <input type="text" name="status" id="status">
+                            </div>
+                            <div>
+                                <label for="usia">Usia : </label>
+                                <input type="text" name="usia" id="usia">
+                            </div>
+                            <div>
+                                <label for="pekerjaan">Pekerjaan : </label>
+                                <input type="text" name="pekerjaan" id="pekerjaan">
+                            </div>
+                            <div>
+                                <label for="pendapatan_pertahun">Pendapatan Pertahun : </label>
+                                <input type="text" name="pendapatan_pertahun" id="pendapatan_pertahun">
+                            </div>
+                            <div>
+                                <label for="produk">Produk : </label>
+                                <input type="text" name="produk" id="produk">
+                            </div>
+                            <button class="btn-add">SUMBIT</button>
+                        </form>
+                    </div>
+                    <!-- Table -->
+                    <table id="my_table" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Jenis kelamin</th>
+                                <th>Status</th>
+                                <th>Usia</th>
+                                <th>Pekerjaan</th>
+                                <th>Pendapatan pertahun</th>
+                                <th>Produk</th>
+                                <th>Label</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if have_data and not selection %}
+                            {% for row in data_predik %}
+                            <tr id="table_null">
+                                <td>{{ row.jenis_kelamin }}</td>
+                                <td>{{ row.status }}</td>
+                                <td>{{ row.usia }}</td>
+                                <td>{{ row.pekerjaan }}</td>
+                                <td>{{ row.pendapatan_pertahun }}</td>
+                                <td>{{ row.produk }}</td>
+                                <td>{{ row.label }}</td>
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                            <tr id="table_null">
+                                <td colspan="7">
+                                    Tidak ada data
+                                </td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <!-- End not selection data -->
         </div>
     </main>
-
     <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
         integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="

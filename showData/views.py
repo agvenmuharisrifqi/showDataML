@@ -36,17 +36,23 @@ def index(request):
     accuracy = accuracy_score(y_test,y_pediksi)
 
     """
-    Input Data
+    Selection Fiture
     """
     have_data = False
+    selection = True
     data_predik = {}
     if request.method == 'POST':
+        selection = request.POST.get('selection')
         input_data = {
             "jenis_kelamin": request.POST.get('jenis_kelamin'),
             "status": request.POST.get('status'),
             "pendapatan_pertahun": request.POST.get('pendapatan_pertahun')
-
         }
+        if selection == 'not_selection':
+            selection = False
+            input_data['usia'] = request.POST.get('usia')
+            input_data['pekerjaan'] = request.POST.get('pekerjaan')
+            input_data['produk'] = request.POST.get('produk')
         data_predik = pd.DataFrame(input_data, index=[0])
         y_predik = model_NB.predict(data_predik)
         data_predik['label'] = y_predik
@@ -65,6 +71,7 @@ def index(request):
         'accuracy': accuracy,
         'data_predik': data_predik,
         'have_data': have_data,
+        'selection': selection
     }
     return render(request, 'index.html', context)
 
@@ -72,10 +79,10 @@ def index2(request):
     df=pd.read_excel(settings.BASE_DIR / 'MachineLearning/FIX Data Minat Nasabah excel.xlsx')
     df['label'].replace({2:0},inplace=True)
     y = df.loc[:, ['label']]
-    
-    x = df.loc[:, ['jenis_kelamin', 'status','usia','pekerjaan','pendapatan_pertahun','produk']]
+    x1= df.loc[:, [ 'jenis_kelamin','status','pendapatan_pertahun']]
 
-    X_train, X_test, y_train, y_test = train_test_split(x,y,test_size = 0.1,random_state=30,train_size=None,shuffle=True,stratify=None)
+
+    X_train, X_test, y_train, y_test = train_test_split(x1,y,test_size = 0.1,random_state=30,train_size=None,shuffle=True,stratify=None)
     model_NB=GaussianNB()
     model_NB.fit(X_train,y_train)
     y_pediksi=model_NB.predict(X_test)#prediksi
@@ -97,7 +104,7 @@ def index2(request):
     accuracy = accuracy_score(y_test,y_pediksi)
 
     """
-    Input Data
+    Not Selection Fiture
     """
     have_data = False
     data_predik = {}
@@ -105,10 +112,10 @@ def index2(request):
         input_data = {
             "jenis_kelamin": request.POST.get('jenis_kelamin'),
             "status": request.POST.get('status'),
-            #"usia":
-            #"pekerjaan":
-            "pendapatan_pertahun": request.POST.get('pendapatan_pertahun')
-            #"produk":
+            "usia": request.POST.get('usia'),
+            "pekerjaan": request.POST.get('pekerjaan'),
+            "pendapatan_pertahun": request.POST.get('pendapatan_pertahun'),
+            "produk": request.POST.get('produk'),
 
         }
         data_predik = pd.DataFrame(input_data, index=[0])

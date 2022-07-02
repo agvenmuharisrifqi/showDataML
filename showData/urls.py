@@ -1,10 +1,8 @@
 from django.contrib import admin
 from django.urls import path
-from .views import index
+from .views import index, index2
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index, name='index'),#seleksi fitur
-    #url baru ke tidak seleksi fitur
-
+    path('', index, name='index'),
 ]
