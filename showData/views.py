@@ -43,7 +43,7 @@ def index(request):
 df = pd.DataFrame(data)
 y_predik=model_NB.predict(df)
 data_predik['label']=y_predik
-print (data_predik)# autput data prediksi
+print (data_predik)# keluaran data prediksi
     
     context = {
         'title': 'SHOW DATA ML',
