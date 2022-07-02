@@ -11,6 +11,11 @@ def index(request):
     df=pd.read_excel(settings.BASE_DIR / 'MachineLearning/FIX Data Minat Nasabah excel.xlsx')
     df['label'].replace({2:0},inplace=True)
     y = df.loc[:, ['label']]
+    
+    # Not selection
+    x = df.loc[:, ['jenis_kelamin', 'status','usia','pekerjaan','pendapatan_pertahun','produk']]
+    
+    # Selection
     x1= df.loc[:, [ 'jenis_kelamin','status','pendapatan_pertahun']]
 
 
@@ -39,22 +44,28 @@ def index(request):
     Selection Fiture
     """
     have_data = False
-    selection = True
+    selection = None
     data_predik = {}
     if request.method == 'POST':
-        selection = request.POST.get('selection')
+        selection = True
+        check_selection = request.POST.get('selection')
         input_data = {
             "jenis_kelamin": request.POST.get('jenis_kelamin'),
             "status": request.POST.get('status'),
             "pendapatan_pertahun": request.POST.get('pendapatan_pertahun')
         }
-        if selection == 'not_selection':
-            selection = False
+        if check_selection == 'not_selection':
+            """
+            Saya ganti dari x1 menjadi x
+            """
+            X_train, X_test, y_train, y_test = train_test_split(x,y,test_size = 0.1,random_state=30,train_size=None,shuffle=True,stratify=None)
+            model_NB=GaussianNB()
+            model_NB.fit(X_train,y_train)
             input_data['usia'] = request.POST.get('usia')
             input_data['pekerjaan'] = request.POST.get('pekerjaan')
             input_data['produk'] = request.POST.get('produk')
+            selection = False
         data_predik = pd.DataFrame(input_data, index=[0])
-        print(data_predik)
         y_predik = model_NB.predict(data_predik)
         data_predik['label'] = y_predik
         json_records = data_predik.reset_index().to_json(orient ='records')

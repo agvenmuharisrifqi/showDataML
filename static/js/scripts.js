@@ -12,6 +12,23 @@ $(".nav-item").each(function (index) {
 
 
 /**
+ * Function for selection or not selection nav and section
+ */
+let selection = '{{ selection }}'
+if (selection === 'True') {
+    $(".nav-item").removeClass("active")
+    $(".nav-item:nth-child(4)").addClass("active")
+    $(".section").removeClass("active")
+    $(".section:nth-child(4)").addClass("active")
+} else if (selection === 'False') {
+    $(".nav-item").removeClass("active")
+    $(".nav-item:nth-child(5)").addClass("active")
+    $(".section").removeClass("active")
+    $(".section:nth-child(5)").addClass("active")
+}
+
+
+/**
  * Function for display table input
  */
 // $(".btn-overlay").click(function () {
